@@ -1,5 +1,7 @@
-//ALEXANDRE LUIS FRATA SELANI
+//ALEXANDRE LUIS FRATA SELANI - BCC
 //RA: 231020759
+//Linux Mint 22.1
+//g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
 
 #include "AUX.h"
 #include <iostream>
@@ -38,6 +40,7 @@ class Analex{
 
         void pulaLinhas(){
             while (proximo == '\n'){
+                
                 programaEmCodigo << std::endl;
                 
                 contadorLinhas++;
@@ -46,7 +49,7 @@ class Analex{
                 programaEmCodigo<<contadorLinhas<<"\t";
                 
             }
-           // std::cout<< "saiu";
+      
         }
 
         void traduzSimbolosEspeciais(){
@@ -70,19 +73,15 @@ class Analex{
 
         void traduzNomes(std::string *token){
             do{
-                
+                std::cout<<proximo;
                 *token+=proximo;
                 PROXIMO();
             }while((verificaSeEhLetra(proximo) || verificaSeEhDigito(proximo)));
 
-            
-            
-            //]std::cout<< "saiu";
         }
 
         void traduzNumeros(std::string *token){
-            do{
-                
+            do{   
                 *token+=proximo;
                 PROXIMO();
             }while(verificaSeEhDigito(proximo));
@@ -102,7 +101,6 @@ class Analex{
 
         void ERRO(std::string atomo){
             if(atomo.length()==1 && !(verificaSeEhDigito(atomo[0]) || verificaSeEhLetra(atomo[0]))) std::cout<<"!!! Simbolo nao reconhecido na linha " << contadorLinhas<<" !!!";
-
             
             fechaArq();
             remove("Result.txt");
@@ -111,11 +109,11 @@ class Analex{
 
         void CODIGO(std::string *token){
             std::string codigo;
-            std::cout << *token +" ";
+            //std::cout << *token +" ";
 
             if(token->length()<=2 && (tabelaDeSimbolos.find(*token)!=tabelaDeSimbolos.end())){
                 codigo=tabelaDeSimbolos[*token];
-                std::cout<<"simbolo especial" << std::endl;
+                //std::cout<<"simbolo especial" << std::endl;
             }
 
             else if(verificaReservadas(*token)){
@@ -124,7 +122,7 @@ class Analex{
                 for(int i=0;i<codigo.length();i++){
                     codigo[i]=toupper(codigo[i]);
                 }
-                std::cout<<"reservada" << std::endl;
+                //std::cout<<"reservada" << std::endl;
             }
             else if(verificaSeEhDigito(*token)){
                 codigo = "NUM_INTEIRO";
@@ -132,14 +130,13 @@ class Analex{
             else{
                 if(tabelaDeIdentificadores.empty() || tabelaDeIdentificadores.find(*token)==tabelaDeIdentificadores.end()){
                     tabelaDeIdentificadores.insert({*token,contadorDeIdentificadores});
-                    std::cout<<"id novo" << std::endl;
+                    //std::cout<<"id novo" << std::endl;
                     
                     codigo = ("id" + std::to_string(contadorDeIdentificadores));
                     contadorDeIdentificadores++;
 
-                    
                 }else{
-                    std::cout<<"id velho" << std::endl;
+                    //std::cout<<"id velho" << std::endl;
                     codigo = ("id" + std::to_string(tabelaDeIdentificadores.at(*token)));
                 }
             }
@@ -148,8 +145,7 @@ class Analex{
 
         }
 
-        
-        
+    
     public:
         Analex(){
             criaTabelaSimbolos();
@@ -170,9 +166,8 @@ class Analex{
         }
 
         void traducao(){
-            
-
             while(proximo!=EOF){
+                
                 atomo = "";
                 pulaLinhas();
 
@@ -182,7 +177,7 @@ class Analex{
 
                 else if(verificaSeEhLetra(proximo)){
                     traduzNomes(&atomo);
-
+                    std::cout<<proximo;
                     //if(verificaReservadas(atomo)) 
                     CODIGO(&atomo);
                     
