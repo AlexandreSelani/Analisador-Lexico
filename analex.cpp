@@ -5,20 +5,47 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include <unordered_map>
 
 class Analex{
     private:
         std::string atomo;
         char proximo;
         int contadorLinhas=1;
-        int codigo;
+        int contadorDeIdentificadores = 1;
+
+        std::unordered_map<std::string, std::string> tabelaDeSimbolos;
+        std::unordered_map<std::string, int> tabelaDeIdentificadores;
 
         std::ifstream programaFonte;
         std::ofstream programaEmCodigo;
 
+        void criaTabelaSimbolos(){
+            tabelaDeSimbolos.insert({",", "V"}); // V DE VIRGULA
+            tabelaDeSimbolos.insert({".", "P"}); // P DE PONTO
+            tabelaDeSimbolos.insert({";", "PV"}); // PV DE PONTO E VIRGULA
+            tabelaDeSimbolos.insert({"(", "PAREN"}); // PAREN (
+            tabelaDeSimbolos.insert({")", "TESIS"}); // TESIS )
+            tabelaDeSimbolos.insert({":", "DOISP"}); // DOISP DE DOIS PONTOS
+            tabelaDeSimbolos.insert({"=", "IGUAL"}); // IGUAL DE IGUAL A 
+            tabelaDeSimbolos.insert({"<", "ESQ"}); // ESQ DE SETA ESQUERDA
+            tabelaDeSimbolos.insert({">", "DIR"}); // DIR DE SETA DIREITA
+            tabelaDeSimbolos.insert({"+", "ADD"}); // ADD DE ADICAO
+            tabelaDeSimbolos.insert({"-", "SUB"}); // SUB DE SUBTRACAO
+            tabelaDeSimbolos.insert({"*", "MULT"}); // MULT DE MULTIPLICACAO
+            tabelaDeSimbolos.insert({":=", "ATR"}); // ATR DE ATRIBUICAO
+        }
+        
+
+        void criaTabelaIdentificadores(){
+
+        }
+
     public:
         Analex(){
+            criaTabelaSimbolos();
+            criaTabelaIdentificadores();
+
             programaFonte.open("Trab1_Compiladores.txt");
             programaEmCodigo.open("Result.txt");
 
@@ -57,11 +84,7 @@ class Analex{
                 else if(verificaSeEhDigito(proximo)){
                     traduzNumeros();
                 }
-                else if(proximo ==' ' || proximo=='\t') PROXIMO();
-                else{
-                    atomo+=proximo;
-                    ERRO(atomo);
-                }  
+                else PROXIMO();
             }
         }
 
@@ -92,24 +115,26 @@ class Analex{
                     s+=proximo;
                     PROXIMO();
                 }
-                std::cout << s<<" ";
+                
                 CODIGO(s);
             
         }
 
         void traduzNomes(){
             do{
-                std::cout<< proximo;
+                
                 atomo+=proximo;
                 PROXIMO();
             }while((verificaSeEhLetra(proximo) || verificaSeEhDigito(proximo)));
+
+            
             
             //]std::cout<< "saiu";
         }
 
         void traduzNumeros(){
             do{
-                std::cout<< proximo;
+                
                 atomo+=proximo;
                 PROXIMO();
             }while(verificaSeEhDigito(proximo));
@@ -133,32 +158,33 @@ class Analex{
 
         void CODIGO(std::string atomo){
             std::string codigo;
+            std::cout << atomo +" ";
 
-            if(atomo.length()==1 && verificaSimbEspeciais(atomo[0])){
-                switch(atomo[0]){
-                    case ',': codigo = "V"; break; //V DE VIRGULA
-                    case '.': codigo = "P"; break; //P DE PONTO
-                    case ';': codigo = "PV"; break; //PV DE PONTO E VIRGULA
-                    case '(': codigo = "PAREN"; break;//PAREN (
-                    case ')': codigo = "TESIS"; break;//TESIS )
-                    case ':': codigo = "DOISP"; break;//DOISP DE DOIS PONTOS
-                    case '=': codigo = "IGUAL"; break;//IGUAL DE IGUAL A 
-                    case '<': codigo = "ESQ";break;//ESQ DE SETA ESQUERDA
-                    case '>': codigo = "DIR"; break; //DIR DE SETA DIREITA
-                    case '+': codigo = "ADD"; break; //ADD DE ADICAO
-                    case '-': codigo = "SUB"; break; //SUB DE SUBTRACAO
-                    case '*': codigo = "MULT"; break; //MULT DE MULTIPLICACAO
+            if(atomo.length()<=2 && (tabelaDeSimbolos.find(atomo)!=tabelaDeSimbolos.end())){
+                codigo=tabelaDeSimbolos[atomo];
+                std::cout<<"simbolo especial" << std::endl;
+            }
 
-                }
-            }else if(atomo[0]==':' && atomo[1]=='=') codigo="ATR"; //atr de atribuicao
-
-            else{
+            else if(verificaReservadas(atomo)){
                 codigo = atomo;
                 
                 for(int i=0;i<codigo.length();i++){
                     codigo[i]=toupper(codigo[i]);
                 }
+                std::cout<<"reservada" << std::endl;
+            }
+            else{
+                if(tabelaDeIdentificadores.empty() || tabelaDeIdentificadores.find(atomo)!=tabelaDeIdentificadores.end()){
+                    tabelaDeIdentificadores.insert({atomo,contadorDeIdentificadores});
+                    std::cout<<"id novo" << std::endl;
+                    contadorDeIdentificadores++;
 
+                    codigo = ("id" + std::to_string(contadorDeIdentificadores));
+                    
+                }else{
+                    std::cout<<"id velho" << std::endl;
+                    codigo = ("id" + std::to_string(tabelaDeIdentificadores.at(atomo)));
+                }
             }
 
             programaEmCodigo << codigo+" ";

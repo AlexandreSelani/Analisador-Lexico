@@ -5,6 +5,7 @@ class Analex{
         std::string atomo;
         char proximo;
         int contadorLinhas;
+        int contadorDeIdentificadores;
 
         std::ifstream programaFonte;
         std::ofstream programaEmCodigo;
