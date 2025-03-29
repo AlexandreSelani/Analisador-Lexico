@@ -72,17 +72,17 @@ class Analex{
                 }
 
                 else if(verificaSeEhLetra(proximo)){
-                    traduzNomes();
+                    traduzNomes(&atomo);
 
                     //if(verificaReservadas(atomo)) 
-                    CODIGO(atomo);
+                    CODIGO(&atomo);
                     
                     //atomo="";//SE TIVER DANDO ERRADO PODE SER ISSO. EU QUE COLOQUEI
                     
                 }
 
                 else if(verificaSeEhDigito(proximo)){
-                    traduzNumeros();
+                    traduzNumeros(&atomo);
                 }
                 else PROXIMO();
             }
@@ -116,14 +116,14 @@ class Analex{
                     PROXIMO();
                 }
                 
-                CODIGO(s);
+                CODIGO(&s);
             
         }
 
-        void traduzNomes(){
+        void traduzNomes(std::string *token){
             do{
                 
-                atomo+=proximo;
+                *token+=proximo;
                 PROXIMO();
             }while((verificaSeEhLetra(proximo) || verificaSeEhDigito(proximo)));
 
@@ -132,10 +132,10 @@ class Analex{
             //]std::cout<< "saiu";
         }
 
-        void traduzNumeros(){
+        void traduzNumeros(std::string *token){
             do{
                 
-                atomo+=proximo;
+                *token+=proximo;
                 PROXIMO();
             }while(verificaSeEhDigito(proximo));
 
@@ -156,17 +156,17 @@ class Analex{
             exit(EXIT_FAILURE);
         }
 
-        void CODIGO(std::string atomo){
+        void CODIGO(std::string *token){
             std::string codigo;
-            std::cout << atomo +" ";
+            std::cout << *token +" ";
 
-            if(atomo.length()<=2 && (tabelaDeSimbolos.find(atomo)!=tabelaDeSimbolos.end())){
-                codigo=tabelaDeSimbolos[atomo];
+            if(token->length()<=2 && (tabelaDeSimbolos.find(*token)!=tabelaDeSimbolos.end())){
+                codigo=tabelaDeSimbolos[*token];
                 std::cout<<"simbolo especial" << std::endl;
             }
 
-            else if(verificaReservadas(atomo)){
-                codigo = atomo;
+            else if(verificaReservadas(*token)){
+                codigo = *token;
                 
                 for(int i=0;i<codigo.length();i++){
                     codigo[i]=toupper(codigo[i]);
@@ -174,16 +174,17 @@ class Analex{
                 std::cout<<"reservada" << std::endl;
             }
             else{
-                if(tabelaDeIdentificadores.empty() || tabelaDeIdentificadores.find(atomo)!=tabelaDeIdentificadores.end()){
-                    tabelaDeIdentificadores.insert({atomo,contadorDeIdentificadores});
+                if(tabelaDeIdentificadores.empty() || tabelaDeIdentificadores.find(*token)==tabelaDeIdentificadores.end()){
+                    tabelaDeIdentificadores.insert({*token,contadorDeIdentificadores});
                     std::cout<<"id novo" << std::endl;
+                    
+                    codigo = ("id" + std::to_string(contadorDeIdentificadores));
                     contadorDeIdentificadores++;
 
-                    codigo = ("id" + std::to_string(contadorDeIdentificadores));
                     
                 }else{
                     std::cout<<"id velho" << std::endl;
-                    codigo = ("id" + std::to_string(tabelaDeIdentificadores.at(atomo)));
+                    codigo = ("id" + std::to_string(tabelaDeIdentificadores.at(*token)));
                 }
             }
 
