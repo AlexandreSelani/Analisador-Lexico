@@ -45,9 +45,7 @@ class Analex{
             PROXIMO();
             
             programaEmCodigo<<contadorLinhas<<"\t";
-                
-            
-      
+
         }
 
         void traduzSimbolosEspeciais(){
@@ -71,7 +69,6 @@ class Analex{
 
         void traduzNomes(std::string *token){
             do{
-                std::cout<<proximo;
                 *token+=proximo;
                 PROXIMO();
             }while((verificaSeEhLetra(proximo) || verificaSeEhDigito(proximo)));
@@ -98,7 +95,7 @@ class Analex{
         void PROXIMO(){proximo = programaFonte.get();}
 
         void ERRO(std::string atomo){
-            std::cout<<"ERRO LEXICO NA LINHA "<<contadorLinhas;
+            std::cout<<"ERRO LEXICO NA LINHA "<<contadorLinhas<<"\n";
             
             fechaArq();
             remove("Result.txt");
@@ -107,11 +104,9 @@ class Analex{
 
         void CODIGO(std::string *token){
             std::string codigo;
-            //std::cout << *token +" ";
 
             if(token->length()<=2 && (tabelaDeSimbolos.find(*token)!=tabelaDeSimbolos.end())){
                 codigo=tabelaDeSimbolos[*token];
-                //std::cout<<"simbolo especial" << std::endl;
             }
 
             else if(verificaReservadas(*token)){
@@ -120,7 +115,7 @@ class Analex{
                 for(int i=0;i<codigo.length();i++){
                     codigo[i]=toupper(codigo[i]);
                 }
-                //std::cout<<"reservada" << std::endl;
+                
             }
             else if(verificaSeEhDigito(*token)){
                 codigo = "NUM_INTEIRO";
@@ -128,13 +123,11 @@ class Analex{
             else{
                 if(tabelaDeIdentificadores.empty() || tabelaDeIdentificadores.find(*token)==tabelaDeIdentificadores.end()){
                     tabelaDeIdentificadores.insert({*token,contadorDeIdentificadores});
-                    //std::cout<<"id novo" << std::endl;
                     
                     codigo = ("id" + std::to_string(contadorDeIdentificadores));
                     contadorDeIdentificadores++;
 
                 }else{
-                    //std::cout<<"id velho" << std::endl;
                     codigo = ("id" + std::to_string(tabelaDeIdentificadores.at(*token)));
                 }
             }
@@ -142,7 +135,6 @@ class Analex{
             programaEmCodigo << codigo+" ";
 
         }
-
     
     public:
         Analex(){
@@ -150,7 +142,7 @@ class Analex{
             
 
             programaFonte.open("Trab1_Compiladores.txt");
-            programaEmCodigo.open("Result.txt");
+            programaEmCodigo.open("Resultado.txt");
 
             if(!(programaFonte.is_open() && programaEmCodigo.is_open())){
                 std::cout<< "erro na abertura de arquivos";
@@ -176,19 +168,15 @@ class Analex{
 
                 else if(verificaSeEhLetra(proximo)){
                     traduzNomes(&atomo);
-                    std::cout<<proximo;
-                    //if(verificaReservadas(atomo)) 
                     CODIGO(&atomo);
-                    
-                    //atomo="";//SE TIVER DANDO ERRADO PODE SER ISSO. EU QUE COLOQUEI
-                    
                 }
 
                 else if(verificaSeEhDigito(proximo)){
                     traduzNumeros(&atomo);
                 }
+
                 else if(proximo==' '||proximo=='\t'||proximo==10) PROXIMO();
-                //else PROXIMO();
+
                 else ERRO(atomo);
             }
         }

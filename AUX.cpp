@@ -11,8 +11,7 @@ bool verificaSimbEspeciais(char caracter){
 }
 
 bool verificaSeEhDigito(char caracter){
-    return (caracter >= 48 && caracter<= 57);    
-    
+    return (caracter >= 48 && caracter<= 57);    //baseado na tabela ascii
 }
 
 bool verificaSeEhDigito(std::string str){
@@ -27,9 +26,9 @@ bool verificaSeEhDigito(std::string str){
 
 bool verificaReservadas(std::string atomo){
     return palavrasReservadas.find(atomo)!= palavrasReservadas.end(); 
-}
+}   //se palavra estiver na lista de reservadas, true. Senao, false  
 
 bool verificaSeEhLetra(char caracter){
-    return ((caracter>=65 && caracter <= 90) || (caracter>=97 && caracter<=122));
+    return ((caracter>=65 && caracter <= 90) || (caracter>=97 && caracter<=122));//baseado na tabela ascii
 }
 
