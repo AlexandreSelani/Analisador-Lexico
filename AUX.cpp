@@ -15,6 +15,16 @@ bool verificaSeEhDigito(char caracter){
     
 }
 
+bool verificaSeEhDigito(std::string str){
+    int i=0;
+
+    for(i=0;i<str.length();i++){
+        if(!verificaSeEhDigito(str[i])) return false;
+    }
+
+    return true;
+}
+
 bool verificaReservadas(std::string atomo){
     return palavrasReservadas.find(atomo)!= palavrasReservadas.end(); 
 }

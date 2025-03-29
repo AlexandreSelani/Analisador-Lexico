@@ -142,7 +142,12 @@ class Analex{
             if(verificaSeEhLetra(proximo)){
                 std::string temp;
                 temp+=proximo;
-                ERRO(temp);}
+                ERRO(temp);
+            }
+            else{
+                CODIGO(token);
+            }
+
         }
 
         void PROXIMO(){proximo = programaFonte.get();}
@@ -172,6 +177,9 @@ class Analex{
                     codigo[i]=toupper(codigo[i]);
                 }
                 std::cout<<"reservada" << std::endl;
+            }
+            else if(verificaSeEhDigito(*token)){
+                codigo = "NUM_INTEIRO";
             }
             else{
                 if(tabelaDeIdentificadores.empty() || tabelaDeIdentificadores.find(*token)==tabelaDeIdentificadores.end()){
