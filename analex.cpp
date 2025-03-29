@@ -39,16 +39,14 @@ class Analex{
         }
 
         void pulaLinhas(){
-            while (proximo == '\n'){
+            programaEmCodigo << std::endl;
+            
+            contadorLinhas++;
+            PROXIMO();
+            
+            programaEmCodigo<<contadorLinhas<<"\t";
                 
-                programaEmCodigo << std::endl;
-                
-                contadorLinhas++;
-                PROXIMO();
-                
-                programaEmCodigo<<contadorLinhas<<"\t";
-                
-            }
+            
       
         }
 
@@ -100,7 +98,7 @@ class Analex{
         void PROXIMO(){proximo = programaFonte.get();}
 
         void ERRO(std::string atomo){
-            if(atomo.length()==1 && !(verificaSeEhDigito(atomo[0]) || verificaSeEhLetra(atomo[0]))) std::cout<<"!!! Simbolo nao reconhecido na linha " << contadorLinhas<<" !!!";
+            std::cout<<"ERRO LEXICO NA LINHA "<<contadorLinhas;
             
             fechaArq();
             remove("Result.txt");
@@ -169,9 +167,10 @@ class Analex{
             while(proximo!=EOF){
                 
                 atomo = "";
-                pulaLinhas();
+                if(proximo==13){
+                    pulaLinhas();}
 
-                if(verificaSimbEspeciais(proximo)){
+                else if(verificaSimbEspeciais(proximo)){
                     traduzSimbolosEspeciais();
                 }
 
@@ -188,7 +187,9 @@ class Analex{
                 else if(verificaSeEhDigito(proximo)){
                     traduzNumeros(&atomo);
                 }
-                else PROXIMO();
+                else if(proximo==' '||proximo=='\t'||proximo==10) PROXIMO();
+                //else PROXIMO();
+                else ERRO(atomo);
             }
         }
 
