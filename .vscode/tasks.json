@@ -1,0 +1,29 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "build-analex", // Match this label with the preLaunchTask in launch.json
+            "command": "/usr/bin/g++-13",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g", // Include debug symbols
+                "${workspaceFolder}/analex.cpp", // Specify the main source file
+                "${workspaceFolder}/AUX.cpp", // Include AUX.cpp in the build
+                "-o",
+                "${workspaceFolder}/analex" // Output the binary as 'analex' in the workspace folder
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Task to build analex.cpp and AUX.cpp into an executable."
+        }
+    ],
+    "version": "2.0.0"
+}
