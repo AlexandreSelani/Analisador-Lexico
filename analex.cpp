@@ -35,58 +35,6 @@ class Analex{
             tabelaDeSimbolos.insert({"*", "MULT"}); // MULT DE MULTIPLICACAO
             tabelaDeSimbolos.insert({":=", "ATR"}); // ATR DE ATRIBUICAO
         }
-        
-
-        void criaTabelaIdentificadores(){
-
-        }
-
-    public:
-        Analex(){
-            criaTabelaSimbolos();
-            criaTabelaIdentificadores();
-
-            programaFonte.open("Trab1_Compiladores.txt");
-            programaEmCodigo.open("Result.txt");
-
-            if(!(programaFonte.is_open() && programaEmCodigo.is_open())){
-                std::cout<< "erro na abertura de arquivos";
-            }
-            else{
-                proximo = programaFonte.get();
-                programaEmCodigo<<contadorLinhas<<"\t";
-            }
-
-
-        }
-
-        void traducao(){
-            
-
-            while(proximo!=EOF){
-                atomo = "";
-                pulaLinhas();
-
-                if(verificaSimbEspeciais(proximo)){
-                    traduzSimbolosEspeciais();
-                }
-
-                else if(verificaSeEhLetra(proximo)){
-                    traduzNomes(&atomo);
-
-                    //if(verificaReservadas(atomo)) 
-                    CODIGO(&atomo);
-                    
-                    //atomo="";//SE TIVER DANDO ERRADO PODE SER ISSO. EU QUE COLOQUEI
-                    
-                }
-
-                else if(verificaSeEhDigito(proximo)){
-                    traduzNumeros(&atomo);
-                }
-                else PROXIMO();
-            }
-        }
 
         void pulaLinhas(){
             while (proximo == '\n'){
@@ -198,6 +146,55 @@ class Analex{
 
             programaEmCodigo << codigo+" ";
 
+        }
+
+        
+        
+    public:
+        Analex(){
+            criaTabelaSimbolos();
+            
+
+            programaFonte.open("Trab1_Compiladores.txt");
+            programaEmCodigo.open("Result.txt");
+
+            if(!(programaFonte.is_open() && programaEmCodigo.is_open())){
+                std::cout<< "erro na abertura de arquivos";
+            }
+            else{
+                proximo = programaFonte.get();
+                programaEmCodigo<<contadorLinhas<<"\t";
+            }
+
+
+        }
+
+        void traducao(){
+            
+
+            while(proximo!=EOF){
+                atomo = "";
+                pulaLinhas();
+
+                if(verificaSimbEspeciais(proximo)){
+                    traduzSimbolosEspeciais();
+                }
+
+                else if(verificaSeEhLetra(proximo)){
+                    traduzNomes(&atomo);
+
+                    //if(verificaReservadas(atomo)) 
+                    CODIGO(&atomo);
+                    
+                    //atomo="";//SE TIVER DANDO ERRADO PODE SER ISSO. EU QUE COLOQUEI
+                    
+                }
+
+                else if(verificaSeEhDigito(proximo)){
+                    traduzNumeros(&atomo);
+                }
+                else PROXIMO();
+            }
         }
 
         void fechaArq(){
