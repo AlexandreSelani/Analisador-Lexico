@@ -84,7 +84,7 @@ class Analex{
             if(verificaSeEhLetra(proximo)){
                 std::string temp;
                 temp+=proximo;
-                ERRO(temp);
+                ERRO();
             }
             else{
                 CODIGO(token);
@@ -94,7 +94,7 @@ class Analex{
 
         void PROXIMO(){proximo = programaFonte.get();}
 
-        void ERRO(std::string atomo){
+        void ERRO(){
             std::cout<<"ERRO LEXICO NA LINHA "<<contadorLinhas<<"\n";
             
             fechaArq();
@@ -177,7 +177,7 @@ class Analex{
 
                 else if(proximo==' '||proximo=='\t'||proximo==10) PROXIMO();
 
-                else ERRO(atomo);
+                else ERRO();
             }
         }
 
